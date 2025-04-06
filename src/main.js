@@ -1,6 +1,8 @@
-import Presenter from './presenter/presenter';
+import Presenter from './presenter/main-presenter';
+import MainModel from './model/main-model';
 
-const presenter = new Presenter();
+const mainModel = new MainModel();
+const presenter = new Presenter({mainModel});
 
 presenter.init();
 
