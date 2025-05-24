@@ -21,4 +21,9 @@ const filter = {
   [FilterType.PAST]: (points) => points.filter((point) => isPointPast(point))
 };
 
-export { Formats, filter };
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
+export { Formats, filter, Mode };
