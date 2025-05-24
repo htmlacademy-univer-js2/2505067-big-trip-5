@@ -31,6 +31,11 @@ export class PointPresenter {
     this.#handleModeChange = changeMode;
   }
 
+  destroy(){
+    remove(this.#pointItem);
+    remove(this.#editFormItem);
+  }
+
   init(point) {
     this.#point = point;
     const prevPointComponent = this.#pointItem;

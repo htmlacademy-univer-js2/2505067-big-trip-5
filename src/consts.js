@@ -26,4 +26,7 @@ const Mode = {
   EDITING: 'EDITING'
 };
 
-export { Formats, filter, Mode };
+const SortTypes = ['day', 'event', 'time', 'price', 'offers'];
+
+export { Formats, filter, Mode, SortTypes };
+
