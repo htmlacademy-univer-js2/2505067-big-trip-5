@@ -71,6 +71,10 @@ function sortByDuration(pointA, pointB){
   return dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom)) - dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
 }
 
+function formatDate(date, dateFormat) {
+  return date ? dayjs(date).format(dateFormat) : '';
+}
+
 export { convertDate, getDestinationBydI, getDuration, getOffersByType, getRandomPrice,
   isEscapeKey, isPointPresent, isPointFuture, isPointPast, updatePointData,
-  sortByDay, sortByPrice, sortByDuration };
+  sortByDay, sortByPrice, sortByDuration, formatDate };

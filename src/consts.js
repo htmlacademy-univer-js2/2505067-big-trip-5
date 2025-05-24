@@ -28,5 +28,7 @@ const Mode = {
 
 const SortTypes = ['day', 'event', 'time', 'price', 'offers'];
 
-export { Formats, filter, Mode, SortTypes };
+const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
+export { Formats, filter, Mode, SortTypes, EVENT_TYPES };
 
