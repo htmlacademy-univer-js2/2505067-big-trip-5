@@ -28,12 +28,6 @@ function getDuration(dateFrom, dateTo){
 
 const getOffersByType = (offers, type) => offers.find((item) => item.type === type).offers.map((offer) => offer.id);
 
-function getRandomPrice(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function isEscapeKey(evt) {
   return evt.key === 'Escape';
 }
@@ -72,18 +66,18 @@ const SortTypes = {
 };
 
 const sort = {
-  [SortTypes.DAY]: (points) => points.sort((pointA, pointB) => dayjs(pointB.dateFrom).diff(dayjs(pointA.dateFrom))),
+  [SortTypes.DAY]: (points) => points.sort((pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom))),
   [SortTypes.TIME]: (points) => points.sort((pointA, pointB) => dayjs(pointB.dateTo).diff(pointB.dateFrom) - dayjs(pointA.dateTo).diff(pointA.dateFrom)),
   [SortTypes.PRICE]: (points) => points.sort((pointA, pointB) => pointB.basePrice - pointA.basePrice)
 };
 
 const getDayAndMonth = (date) => dayjs(date).format('D MMM');
 
-const getRouteDates = (points) => [getDayAndMonth(points[points.length - 1].dateFrom), getDayAndMonth(points[0].dateTo)];
+const getRouteDates = (points) => points.length > 0 ? [getDayAndMonth(points[0].dateFrom), getDayAndMonth(points[points.length - 1].dateTo)] : ['', ''];
 
 const getRoute = (points, destinations) => {
   const route = points.map((point) => getDestinationById(destinations, point.destination).name);
-  return route.length < 4 ? route.join(' &mdash; ') : `${route[route.length - 1]} &mdash; ... &mdash; ${route[0]}`;
+  return route.length < 4 ? route.join(' &mdash; ') : `${route[0]} &mdash; ... &mdash; ${route[route.length - 1]}`;
 };
 
 const getRoutePrice = (points, offers) => {
@@ -99,7 +93,6 @@ export {
   getDestinationById,
   getDuration,
   getOffersByType,
-  getRandomPrice,
   isEscapeKey,
   isPointPresent,
   isPointFuture,

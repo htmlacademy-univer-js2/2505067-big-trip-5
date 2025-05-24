@@ -5,7 +5,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import he from 'he';
 
 function createFormEditingTemplate(point, destinations, allOffers, typeOffers) {
-  const {basePrice, dateFrom, dateTo, destination, offers, type, isSaving, isDeleting, isDisabled} = point;
+  const {basePrice, dateFrom, dateTo, destination, offers, type, isSaving, isDeleting, isDisabled, isPointCreation} = point;
   const pointTypeOffers = typeOffers.map((id) => getOfferById(allOffers, id));
   const destinationInfo = getDestinationById(destinations, destination);
   const eventTypes = Array.from(allOffers.map((item) => item.type));
@@ -59,7 +59,7 @@ function createFormEditingTemplate(point, destinations, allOffers, typeOffers) {
                     <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" ${isDisabled ? 'disabled' : ''} value="${basePrice}">
                   </div>
                   <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${saveText}</button>
-                  <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${deleteText}</button>
+                  <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isPointCreation ? 'Cancel' : deleteText}</button>
                   ${isValid ? `<button class="event__rollup-btn" type="button">
                     <span class="visually-hidden">Open event</span>
                   </button>` : ''}
@@ -78,10 +78,10 @@ function createFormEditingTemplate(point, destinations, allOffers, typeOffers) {
                       </div>`).join('')}
                     </div>
                   </section>` : ''}
-                  ${destinationInfo && (destinationInfo.description !== '' || destinationInfo.pictures.length) > 0 ? `<section class="event__section  event__section--destination">
+                  ${destinationInfo && destinationInfo.description !== '' ? `<section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                    <p class="event__destination-description">${destinationInfo.description}</p>
-                    <div class="event__photos-container">
+                    <p class="event__destination-description">${destinationInfo.description}</p>` : ''}
+                    ${destinationInfo && destinationInfo.pictures.length > 0 ? `<div class="event__photos-container">
                       <div class="event__photos-tape">
                       ${destinationInfo.pictures.map((image) => `<img class="event__photo" src="${image.src}" alt="${image.description}">`).join('')}
                       </div>

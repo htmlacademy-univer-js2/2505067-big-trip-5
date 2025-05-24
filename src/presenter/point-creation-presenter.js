@@ -1,6 +1,6 @@
 import FormEditing from '../view/form-editing-view.js';
 import { render, remove, RenderPosition } from '../framework/render';
-import { UserAction, UpdateType } from '../consts.js';
+import { UserAction, UpdateType, FilterType } from '../consts.js';
 import { getOffersByType } from '../utils.js';
 
 export default class PointCreationPresenter {
@@ -35,10 +35,12 @@ export default class PointCreationPresenter {
       onDeleteClick: this.destroy
     });
 
+    this.#pointEditComponent.updateElement({ isPointCreation: true });
     render(this.#pointEditComponent, this.#pointListComponent.element, RenderPosition.AFTERBEGIN);
   }
 
   #handleAddButtonClick = () => {
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#handleModeChange();
     document.addEventListener('keydown', this.#onEscKeydown);
     this.init();
@@ -53,7 +55,7 @@ export default class PointCreationPresenter {
     );
 
     if (update.isSaving) {
-      this.#filterModel.setFilter(UpdateType.MAJOR, 'everything');
+      this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
       document.removeEventListener('keydown', this.#onEscKeydown);
       this.destroy();
     }
@@ -62,6 +64,7 @@ export default class PointCreationPresenter {
   #onEscKeydown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
       this.destroy();
       document.removeEventListener('keydown', this.#onEscKeydown);
     }
@@ -73,6 +76,10 @@ export default class PointCreationPresenter {
   };
 
   setAborting() {
-    this.#pointEditComponent.shake(this.#pointEditComponent.updateElement({ isSaving: false }));
+    this.#pointEditComponent.shake(this.#pointEditComponent.updateElement({ isSaving: false, isDisabled: false }));
+  }
+
+  setSaving() {
+    this.#pointEditComponent.updateElement({isSaving: true, isDisabled: true });
   }
 }

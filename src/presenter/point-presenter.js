@@ -93,6 +93,7 @@ export class PointPresenter {
     replace(this.#pointItem, this.#editFormItem);
     document.removeEventListener('keydown', this.#escKeyHandler);
     this.#mode = Mode.DEFAULT;
+    this.#editFormItem.reset(this.#point);
   }
 
   #addToFaivorite = (point) => {

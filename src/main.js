@@ -7,7 +7,7 @@ import PointsApiService from './server/points-api-service.js';
 import TripInfoPresenter from './presenter/trip-info-presenter.js';
 
 const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
-const AUTHORIZATION = 'Basic rp1e251ol98998a';
+const AUTHORIZATION = 'Basic rp1e251ol78998a';
 
 const pointsModel = new PointsModel({pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)});
 const filterModel = new FilterModel();
