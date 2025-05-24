@@ -32,8 +32,6 @@ const SortTypes = {
   TIME: 'time'
 };
 
-const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
   ADD_POINT: 'ADD_POINT',
@@ -55,7 +53,6 @@ const NoPointMessages = {
 };
 
 const NEW_POINT = {
-  id: crypto.randomUUID(),
   type: 'flight',
   destination: '',
   dateFrom: '',
@@ -77,5 +74,5 @@ const TimeLimit = {
   UPPER_LIMIT: 800
 };
 
-export { Formats, filter, Mode, SortTypes, EVENT_TYPES, FilterType, UserAction, UpdateType, NoPointMessages, NEW_POINT, Method, TimeLimit};
+export { Formats, filter, Mode, SortTypes, FilterType, UserAction, UpdateType, NoPointMessages, NEW_POINT, Method, TimeLimit};
 

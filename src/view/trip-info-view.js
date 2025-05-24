@@ -10,11 +10,11 @@ function createTripInfoTemplate(points, destinations, offers) {
   return `<section class="trip-main__trip-info  trip-info">
             <div class="trip-info__main">
               <h1 class="trip-info__title">${route}</h1>
-              <p class="trip-info__dates">${routeDates[0]}&nbsp;&mdash;&nbsp;${routeDates[1]}</p>
+              <p class="trip-info__dates">${routeDates[0] !== '' ? `${routeDates[0]}&nbsp;&mdash;&nbsp;${routeDates[1]}` : ''}</p>
             </div>
-            <p class="trip-info__cost">
+            ${routePrice > 0 ? `<p class="trip-info__cost">
               Total: &euro;&nbsp;<span class="trip-info__cost-value">${routePrice}</span>
-            </p>
+            </p>` : ''}
           </section>`;
 }
 
