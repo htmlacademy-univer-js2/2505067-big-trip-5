@@ -4,7 +4,7 @@ import {render, replace, remove} from '../framework/render.js';
 import { isEscapeKey } from '../utils.js';
 import { Mode, UserAction, UpdateType } from '../consts.js';
 
-export class PointPresenter {
+export default class PointPresenter {
   #destinations = null;
   #offers = null;
   #point = null;
@@ -16,11 +16,11 @@ export class PointPresenter {
   #mode = Mode.DEFAULT;
   #typeOffers = null;
 
-  #escKeyHandler = (event) => {
+  #onEscKey = (event) => {
     if (isEscapeKey(event)) {
       event.preventDefault();
       this.#replaceEditFormToPoint();
-      document.removeEventListener('keydown', this.#escKeyHandler);
+      document.removeEventListener('keydown', this.#onEscKey);
     }
   };
 
@@ -46,7 +46,7 @@ export class PointPresenter {
     this.#pointItem = new RoutePoint({point: this.#point,
       destinations: this.#destinations,
       offers: this.#offers,
-      onRollButtonClick: this.#editFormResetHandler.bind(this),
+      onRollButtonClick: this.#onEditFormReset.bind(this),
       onFavoriteClick: this.#addToFaivorite
     });
 
@@ -54,7 +54,7 @@ export class PointPresenter {
       point: this.#point,
       offers: this.#offers,
       destinations: this.#destinations,
-      onFormSubmit: this.#editFormSubmitHandler.bind(this),
+      onFormSubmit: this.#onEditFormSubmit.bind(this),
       onFormReset: this.#replaceEditFormToPoint.bind(this),
       typeOffers: this.#typeOffers,
       onDeleteClick: this.#handleDeleteButtonClick
@@ -91,26 +91,25 @@ export class PointPresenter {
 
   #replaceEditFormToPoint() {
     replace(this.#pointItem, this.#editFormItem);
-    document.removeEventListener('keydown', this.#escKeyHandler);
+    document.removeEventListener('keydown', this.#onEscKey);
     this.#mode = Mode.DEFAULT;
-    this.#editFormItem.reset(this.#point);
   }
 
   #addToFaivorite = (point) => {
     this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, {...point, isFavorite: !point.isFavorite});
   };
 
-  #editFormSubmitHandler = async (point) => {
+  #onEditFormSubmit = async (point) => {
     await this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
     if (point.isSaving) {
       this.#replaceEditFormToPoint();
-      document.removeEventListener('keydown', this.#escKeyHandler);
+      document.removeEventListener('keydown', this.#onEscKey);
     }
   };
 
-  #editFormResetHandler = () => {
+  #onEditFormReset = () => {
     this.#replacePointToEditForm();
-    document.addEventListener('keydown', this.#escKeyHandler);
+    document.addEventListener('keydown', this.#onEscKey);
   };
 
   #handleDeleteButtonClick = (point) => {
@@ -138,3 +137,4 @@ export class PointPresenter {
     }
   }
 }
+

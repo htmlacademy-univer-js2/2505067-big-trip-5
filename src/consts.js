@@ -1,6 +1,7 @@
 import { isPointFuture, isPointPast, isPointPresent } from './utils';
+import dayjs from 'dayjs';
 
-const Formats = {
+const Format = {
   TIME: 'HH:mm',
   DAY: 'MMM D',
   FULL_DATE: 'D/MM/YY HH:mm',
@@ -14,7 +15,7 @@ const FilterType = {
   PAST:'past',
 };
 
-const filter = {
+const Filter = {
   [FilterType.EVERYTHING]: (points) => [...points],
   [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point)),
   [FilterType.PRESENT]: (points) => points.filter((point) => isPointPresent(point)),
@@ -26,10 +27,16 @@ const Mode = {
   EDITING: 'EDITING'
 };
 
-const SortTypes = {
+const SortType = {
   DAY: 'day',
   PRICE: 'price',
   TIME: 'time'
+};
+
+const SortingBySection = {
+  [SortType.DAY]: (points) => points.sort((pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom))),
+  [SortType.TIME]: (points) => points.sort((pointA, pointB) => dayjs(pointB.dateTo).diff(pointB.dateFrom) - dayjs(pointA.dateTo).diff(pointA.dateFrom)),
+  [SortType.PRICE]: (points) => points.sort((pointA, pointB) => pointB.basePrice - pointA.basePrice)
 };
 
 const UserAction = {
@@ -45,7 +52,7 @@ const UpdateType = {
   INIT: 'INIT'
 };
 
-const NoPointMessages = {
+const MessageNoPoint = {
   EVERYTHING: 'Click New Event to create your first point',
   PAST: 'There are no past events now',
   PRESENT: 'There are no present events now',
@@ -74,5 +81,5 @@ const TimeLimit = {
   UPPER_LIMIT: 800
 };
 
-export { Formats, filter, Mode, SortTypes, FilterType, UserAction, UpdateType, NoPointMessages, NEW_POINT, Method, TimeLimit};
+export { Format, Filter, Mode, SortType, SortingBySection, FilterType, UserAction, UpdateType, MessageNoPoint, NEW_POINT, Method, TimeLimit};
 

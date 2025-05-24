@@ -1,9 +1,9 @@
 import Sorting from '../view/sorting-view.js';
 import { render, remove, RenderPosition } from '../framework/render.js';
 import EmptyListView from '../view/empty-list-view.js';
-import { PointPresenter } from './point-presenter.js';
-import { sort, getOffersByType } from '../utils.js';
-import { SortTypes, UpdateType, UserAction, NEW_POINT, filter, TimeLimit } from '../consts.js';
+import PointPresenter from './point-presenter.js';
+import { getOffersByType } from '../utils.js';
+import { SortType, SortingBySection, UpdateType, UserAction, NEW_POINT, Filter, TimeLimit } from '../consts.js';
 import PointCreationPresenter from './point-creation-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import ErrorView from '../view/error-view.js';
@@ -80,7 +80,7 @@ export default class Presenter {
   };
 
   async init() {
-    this.#onSortChange(SortTypes.DAY);
+    this.#onSortChange(SortType.DAY);
   }
 
   #renderPoint(point) {
@@ -132,9 +132,9 @@ export default class Presenter {
     this.#pointCreationPresenter.destroy();
   }
 
-  #onSortChange(sortTypes) {
-    if (this.#currentSortType !== sortTypes) {
-      this.#currentSortType = sortTypes;
+  #onSortChange(sortType) {
+    if (this.#currentSortType !== sortType) {
+      this.#currentSortType = sortType;
       this.#renderSort();
       this.#clearListView();
       this.#renderPointList();
@@ -157,7 +157,7 @@ export default class Presenter {
     }
 
     if (isFilterTypeChanged) {
-      this.#currentSortType = SortTypes.DAY;
+      this.#currentSortType = SortType.DAY;
       this.#renderSort();
     }
 
@@ -188,17 +188,17 @@ export default class Presenter {
     let points = this.#pointsModel.points;
 
     switch (this.#currentSortType) {
-      case SortTypes.PRICE:
-        points = sort[SortTypes.PRICE](points);
+      case SortType.PRICE:
+        points = SortingBySection[SortType.PRICE](points);
         break;
-      case SortTypes.TIME:
-        points = sort[SortTypes.TIME](points);
+      case SortType.TIME:
+        points = SortingBySection[SortType.TIME](points);
         break;
       default:
-        points = sort[SortTypes.DAY](points);
+        points = SortingBySection[SortType.DAY](points);
         break;
     }
-    return filter[this.#filterType](points);
+    return Filter[this.#filterType](points);
   }
 
   get destinations() {

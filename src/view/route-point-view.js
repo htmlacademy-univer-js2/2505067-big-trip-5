@@ -1,18 +1,18 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { convertDate, getDuration, getDestinationById, getOfferById } from '../utils.js';
-import { Formats } from '../consts.js';
+import { Format } from '../consts.js';
 
 function createRoutePointTemplate(point, destinations, allOffers) {
   const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = point;
 
-  const day = convertDate(dateFrom, Formats.DAY);
-  const timeStart = convertDate(dateFrom, Formats.TIME);
-  const timeEnd = convertDate(dateTo, Formats.TIME);
+  const day = convertDate(dateFrom, Format.DAY);
+  const timeStart = convertDate(dateFrom, Format.TIME);
+  const timeEnd = convertDate(dateTo, Format.TIME);
 
   const destinationById = getDestinationById(destinations, destination);
   const duration = getDuration(dateFrom, dateTo);
-  const offersObject = offers.map((id) => getOfferById(allOffers, id));
-  const selectedOffers = offersObject ? offersObject
+  const offersById = offers.map((id) => getOfferById(allOffers, id));
+  const selectedOffers = offersById ? offersById
     .map((offer) => `
       <li class="event__offer">
         <span class="event__offer-title">${offer.title}</span>
@@ -83,3 +83,4 @@ export default class RoutePoint extends AbstractView {
     return createRoutePointTemplate(this.#point, this.#destinations, this.#offers);
   }
 }
+
