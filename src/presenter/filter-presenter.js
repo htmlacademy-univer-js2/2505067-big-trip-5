@@ -47,7 +47,7 @@ export default class FilterPresenter {
   };
 
   #handleFilterTypeChange = (filterType) => {
-    if (this.#filterModel.filter === filterType) {
+    if (this.#filterModel.filter === filterType || this.filters.some((item) => item.type === filterType && item.points.length === 0)) {
       return;
     }
     this.#filterModel.setFilter(UpdateType.MAJOR, filterType);

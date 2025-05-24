@@ -44,6 +44,8 @@ export class PointPresenter {
     const prevEditFormComponent = this.#editFormItem;
 
     this.#pointItem = new RoutePoint({point: this.#point,
+      destinations: this.#destinations,
+      offers: this.#offers,
       onRollButtonClick: this.#editFormResetHandler.bind(this),
       onFavoriteClick: this.#addToFaivorite
     });
@@ -97,10 +99,12 @@ export class PointPresenter {
     this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, {...point, isFavorite: !point.isFavorite});
   };
 
-  #editFormSubmitHandler = (point) => {
-    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
-    this.#replaceEditFormToPoint();
-    document.removeEventListener('keydown', this.#escKeyHandler);
+  #editFormSubmitHandler = async (point) => {
+    await this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
+    if (point.isSaving) {
+      this.#replaceEditFormToPoint();
+      document.removeEventListener('keydown', this.#escKeyHandler);
+    }
   };
 
   #editFormResetHandler = () => {
@@ -111,5 +115,25 @@ export class PointPresenter {
   #handleDeleteButtonClick = (point) => {
     this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
   };
-}
 
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointItem.shake();
+      return;
+    }
+
+    this.#editFormItem.shake(this.#editFormItem.updateElement({ isDisabled: false, isSaving: false, isDeleting: false }));
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editFormItem.updateElement({ isDisabled: true, isSaving: true });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editFormItem.updateElement({ isDisabled: true, isDeleting: true });
+    }
+  }
+}

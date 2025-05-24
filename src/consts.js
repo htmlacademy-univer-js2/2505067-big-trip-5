@@ -1,5 +1,4 @@
 import { isPointFuture, isPointPast, isPointPresent } from './utils';
-import { getOffersByType } from './utils.js';
 
 const Formats = {
   TIME: 'HH:mm',
@@ -44,7 +43,8 @@ const UserAction = {
 const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
-  MAJOR: 'MAJOR'
+  MAJOR: 'MAJOR',
+  INIT: 'INIT'
 };
 
 const NoPointMessages = {
@@ -61,10 +61,21 @@ const NEW_POINT = {
   dateFrom: '',
   dateTo: '',
   basePrice: 0,
-  offers: getOffersByType('flight'),
+  offers: [],
   isFavorite: false
 };
 
-export { Formats, filter, Mode, SortTypes, EVENT_TYPES, FilterType, UserAction, UpdateType, NoPointMessages, NEW_POINT};
+const Method = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  DELETE: 'DELETE'
+};
 
+const TimeLimit = {
+  LOWER_LIMIT: 400,
+  UPPER_LIMIT: 800
+};
+
+export { Formats, filter, Mode, SortTypes, EVENT_TYPES, FilterType, UserAction, UpdateType, NoPointMessages, NEW_POINT, Method, TimeLimit};
 
