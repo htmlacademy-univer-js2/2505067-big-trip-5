@@ -1,13 +1,12 @@
 import dayjs from 'dayjs';
 import { offersMock } from './mock/offers-mock';
+import { destinationsMock } from './mock/destinations-mock.js';
 
 function convertDate(date, newFormat) {
   return dayjs(date).format(newFormat);
 }
 
-function getDestinationBydI(id, destinations) {
-  return destinations.find((destination) => destination.id === id);
-}
+const getDestinationById = (id) => destinationsMock.find((item) => item.id === id);
 
 function getDuration(dateFrom, dateTo){
   const start = dayjs(dateFrom);
@@ -29,9 +28,7 @@ function getDuration(dateFrom, dateTo){
   }
 }
 
-function getOffersByType(point) {
-  return offersMock.find((offer) => offer.type === point.type).offers;
-}
+const getOffersByType = (type) => offersMock.find((item) => item.type === type).offers.map((offer) => offer.id);
 
 function getRandomPrice(min, max) {
   min = Math.ceil(min);
@@ -71,10 +68,43 @@ function sortByDuration(pointA, pointB){
   return dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom)) - dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
 }
 
-function formatDate(date, dateFormat) {
-  return date ? dayjs(date).format(dateFormat) : '';
-}
+const capitalizeWord = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
-export { convertDate, getDestinationBydI, getDuration, getOffersByType, getRandomPrice,
-  isEscapeKey, isPointPresent, isPointFuture, isPointPast, updatePointData,
-  sortByDay, sortByPrice, sortByDuration, formatDate };
+const getMonthAndDate = (date) => dayjs(date).format('MMM DD');
+
+const getFullDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
+
+const getAllDestinations = () => destinationsMock;
+
+const getAllOffers = () => offersMock;
+
+const getOfferById = (id) => {
+  for (let i = 0; i < offersMock.length; i++) {
+    const foundOffer = offersMock[i].offers.find((offer) => offer.id === id);
+    if (foundOffer) {
+      return foundOffer;
+    }
+  }
+};
+
+export {
+  convertDate,
+  getDestinationById,
+  getDuration,
+  getOffersByType,
+  getRandomPrice,
+  isEscapeKey,
+  isPointPresent,
+  isPointFuture,
+  isPointPast,
+  updatePointData,
+  sortByDay,
+  sortByDuration,
+  sortByPrice,
+  capitalizeWord,
+  getMonthAndDate,
+  getFullDate,
+  getAllDestinations,
+  getAllOffers,
+  getOfferById
+};
