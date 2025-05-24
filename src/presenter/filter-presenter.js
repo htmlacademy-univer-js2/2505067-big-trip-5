@@ -1,5 +1,5 @@
 import { render, remove, replace } from '../framework/render.js';
-import { FilterType, UpdateType, filter } from '../consts.js';
+import { FilterType, UpdateType, Filter } from '../consts.js';
 import Filters from '../view/filters-view.js';
 
 export default class FilterPresenter {
@@ -21,7 +21,7 @@ export default class FilterPresenter {
 
     return Object.values(FilterType).map((type) => ({
       type,
-      points: filter[type](points)
+      points: Filter[type](points)
     }));
   }
 

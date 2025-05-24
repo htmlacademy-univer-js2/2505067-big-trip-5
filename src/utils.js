@@ -46,8 +46,6 @@ function isPointPast(point) {
 
 const capitalizeWord = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
-const getMonthAndDate = (date) => dayjs(date).format('MMM DD');
-
 const getFullDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
 
 const getOfferById = (offers, id) => {
@@ -57,18 +55,6 @@ const getOfferById = (offers, id) => {
       return foundOffer;
     }
   }
-};
-
-const SortTypes = {
-  DAY: 'day',
-  PRICE: 'price',
-  TIME: 'time'
-};
-
-const sort = {
-  [SortTypes.DAY]: (points) => points.sort((pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom))),
-  [SortTypes.TIME]: (points) => points.sort((pointA, pointB) => dayjs(pointB.dateTo).diff(pointB.dateFrom) - dayjs(pointA.dateTo).diff(pointA.dateFrom)),
-  [SortTypes.PRICE]: (points) => points.sort((pointA, pointB) => pointB.basePrice - pointA.basePrice)
 };
 
 const getDayAndMonth = (date) => dayjs(date).format('D MMM');
@@ -98,11 +84,10 @@ export {
   isPointFuture,
   isPointPast,
   capitalizeWord,
-  getMonthAndDate,
   getFullDate,
   getOfferById,
-  sort,
   getRouteDates,
   getRoute,
   getRoutePrice
 };
+
