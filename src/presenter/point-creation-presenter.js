@@ -1,26 +1,24 @@
 import FormEditing from '../view/form-editing-view.js';
 import { render, remove, RenderPosition } from '../framework/render';
 import { UserAction, UpdateType } from '../consts.js';
+import { getOffersByType } from '../utils.js';
 
 export default class PointCreationPresenter {
   #pointListComponent = null;
   #pointEditComponent = null;
   #filterModel = null;
-  #addButton = document.querySelector('.trip-main__event-add-btn');
+  #addButton = null;
+  #pointsModel = null;
   #point = null;
-  #typeOffers = null;
-  #offers = null;
-  #destinations = null;
   #handleDataChange = null;
   #handleModeChange = null;
 
-  constructor({ filterModel, pointListComponent, point, typeOffers, offers, destinations, handleDataChange, handleModeChange }) {
+  constructor({ filterModel, pointListComponent, point, pointsModel, addButton, handleDataChange, handleModeChange }) {
     this.#filterModel = filterModel;
     this.#pointListComponent = pointListComponent;
     this.#point = point;
-    this.#typeOffers = typeOffers;
-    this.#offers = offers;
-    this.#destinations = destinations;
+    this.#pointsModel = pointsModel;
+    this.#addButton = addButton;
     this.#handleDataChange = handleDataChange;
     this.#handleModeChange = handleModeChange;
 
@@ -30,9 +28,9 @@ export default class PointCreationPresenter {
   init() {
     this.#pointEditComponent = new FormEditing({
       point: this.#point,
-      typeOffers: this.#typeOffers,
-      offers: this.#offers,
-      destinations: this.#destinations,
+      typeOffers: getOffersByType(this.#pointsModel.offers, this.#point.type),
+      offers: this.#pointsModel.offers,
+      destinations: this.#pointsModel.destinations,
       onFormSubmit: this.#handleFormSubmit.bind(this),
       onDeleteClick: this.destroy
     });
@@ -53,9 +51,12 @@ export default class PointCreationPresenter {
       UpdateType.MAJOR,
       update
     );
-    this.#filterModel.setFilter(UpdateType.MAJOR, 'everything');
-    document.removeEventListener('keydown', this.#onEscKeydown);
-    this.destroy();
+
+    if (update.isSaving) {
+      this.#filterModel.setFilter(UpdateType.MAJOR, 'everything');
+      document.removeEventListener('keydown', this.#onEscKeydown);
+      this.destroy();
+    }
   };
 
   #onEscKeydown = (evt) => {
@@ -70,4 +71,8 @@ export default class PointCreationPresenter {
     remove(this.#pointEditComponent);
     this.#addButton.disabled = false;
   };
+
+  setAborting() {
+    this.#pointEditComponent.shake(this.#pointEditComponent.updateElement({ isSaving: false }));
+  }
 }

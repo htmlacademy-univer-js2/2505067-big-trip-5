@@ -1,19 +1,18 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { convertDate, getDuration, getMonthAndDate, getDestinationById, getOfferById } from '../utils.js';
+import { convertDate, getDuration, getDestinationById, getOfferById } from '../utils.js';
 import { Formats } from '../consts.js';
 
-function createRoutePointTemplate(point) {
+function createRoutePointTemplate(point, destinations, allOffers) {
   const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = point;
 
   const day = convertDate(dateFrom, Formats.DAY);
   const timeStart = convertDate(dateFrom, Formats.TIME);
   const timeEnd = convertDate(dateTo, Formats.TIME);
-  const endDate = getMonthAndDate(dateTo);
 
-  const destinationById = getDestinationById(destination);
+  const destinationById = getDestinationById(destinations, destination);
   const duration = getDuration(dateFrom, dateTo);
-  const offersObject = offers.map((id) => getOfferById(id));
-  const selectedOffers = offersObject
+  const offersObject = offers.map((id) => getOfferById(allOffers, id));
+  const selectedOffers = offersObject ? offersObject
     .map((offer) => `
       <li class="event__offer">
         <span class="event__offer-title">${offer.title}</span>
@@ -21,7 +20,7 @@ function createRoutePointTemplate(point) {
         <span class="event__offer-price">${offer.price}</span>
       </li>
     `)
-    .join('');
+    .join('') : '';
 
   return `<li class="trip-events__item">
             <div class="event">
@@ -32,9 +31,9 @@ function createRoutePointTemplate(point) {
               <h3 class="event__title">${type} ${destinationById.name}</h3>
               <div class="event__schedule">
                 <p class="event__time">
-                  <time class="event__start-time" datetime="${dateFrom}">${timeStart} ${day === endDate ? '' : day}</time>
+                  <time class="event__start-time" datetime="${dateFrom}">${timeStart}</time>
                   &mdash;
-                  <time class="event__end-time" datetime="${dateTo}">${timeEnd} ${day === endDate ? '' : endDate}</time>
+                  <time class="event__end-time" datetime="${dateTo}">${timeEnd}</time>
                 </p>
                 <p class="event__duration">${duration}</p>
               </div>
@@ -60,11 +59,15 @@ function createRoutePointTemplate(point) {
 
 export default class RoutePoint extends AbstractView {
   #point = null;
+  #destinations = null;
+  #offers = null;
 
-  constructor({point, onRollButtonClick, onFavoriteClick}) {
+  constructor({point, destinations, offers, onRollButtonClick, onFavoriteClick}) {
     super();
 
     this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', (event) => {
       event.preventDefault();
@@ -77,6 +80,6 @@ export default class RoutePoint extends AbstractView {
   }
 
   get template() {
-    return createRoutePointTemplate(this.#point);
+    return createRoutePointTemplate(this.#point, this.#destinations, this.#offers);
   }
 }
