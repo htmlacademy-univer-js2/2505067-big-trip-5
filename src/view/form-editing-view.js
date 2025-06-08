@@ -238,3 +238,4 @@ export default class FormEditing extends AbstractStatefulView {
     };
   }
 }
+
