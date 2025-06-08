@@ -1,7 +1,7 @@
 import FormEditing from '../view/form-editing-view.js';
 import { render, remove, RenderPosition } from '../framework/render';
 import { UserAction, UpdateType, FilterType } from '../consts.js';
-import { getOffersByType } from '../utils.js';
+import { getOffersByType, isEscapeKey } from '../utils.js';
 
 export default class PointCreationPresenter {
   #pointListComponent = null;
@@ -10,19 +10,27 @@ export default class PointCreationPresenter {
   #addButton = null;
   #pointsModel = null;
   #point = null;
-  #handleDataChange = null;
-  #handleModeChange = null;
+  #onDataChange = null;
+  #onModeChange = null;
 
-  constructor({ filterModel, pointListComponent, point, pointsModel, addButton, handleDataChange, handleModeChange }) {
+  constructor({ filterModel, pointListComponent, point, pointsModel, addButton, onDataChange, onModeChange }) {
     this.#filterModel = filterModel;
     this.#pointListComponent = pointListComponent;
     this.#point = point;
     this.#pointsModel = pointsModel;
     this.#addButton = addButton;
-    this.#handleDataChange = handleDataChange;
-    this.#handleModeChange = handleModeChange;
+    this.#onDataChange = onDataChange;
+    this.#onModeChange = onModeChange;
 
-    this.#addButton.addEventListener('click', this.#handleAddButtonClick);
+    this.#addButton.addEventListener('click', this.#onAddButtonClick);
+  }
+
+  setAborting() {
+    this.#pointEditComponent.shake(this.#pointEditComponent.updateElement({ isSaving: false, isDisabled: false }));
+  }
+
+  setSaving() {
+    this.#pointEditComponent.updateElement({isSaving: true, isDisabled: true });
   }
 
   init() {
@@ -31,7 +39,7 @@ export default class PointCreationPresenter {
       typeOffers: getOffersByType(this.#pointsModel.offers, this.#point.type),
       offers: this.#pointsModel.offers,
       destinations: this.#pointsModel.destinations,
-      onFormSubmit: this.#handleFormSubmit.bind(this),
+      onFormSubmit: this.#onFormSubmit.bind(this),
       onDeleteClick: this.destroy
     });
 
@@ -39,16 +47,21 @@ export default class PointCreationPresenter {
     render(this.#pointEditComponent, this.#pointListComponent.element, RenderPosition.AFTERBEGIN);
   }
 
-  #handleAddButtonClick = () => {
+  destroy = () => {
+    remove(this.#pointEditComponent);
+    this.#addButton.disabled = false;
+  };
+
+  #onAddButtonClick = () => {
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#handleModeChange();
+    this.#onModeChange();
     document.addEventListener('keydown', this.#onEscKeydown);
     this.init();
     this.#addButton.disabled = true;
   };
 
-  #handleFormSubmit = (update) => {
-    this.#handleDataChange(
+  #onFormSubmit = (update) => {
+    this.#onDataChange(
       UserAction.ADD_POINT,
       UpdateType.MAJOR,
       update
@@ -62,24 +75,12 @@ export default class PointCreationPresenter {
   };
 
   #onEscKeydown = (evt) => {
-    if (evt.key === 'Escape') {
+    if (isEscapeKey(evt)) {
       evt.preventDefault();
       this.#filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
       this.destroy();
       document.removeEventListener('keydown', this.#onEscKeydown);
     }
   };
-
-  destroy = () => {
-    remove(this.#pointEditComponent);
-    this.#addButton.disabled = false;
-  };
-
-  setAborting() {
-    this.#pointEditComponent.shake(this.#pointEditComponent.updateElement({ isSaving: false, isDisabled: false }));
-  }
-
-  setSaving() {
-    this.#pointEditComponent.updateElement({isSaving: true, isDisabled: true });
-  }
 }
+
