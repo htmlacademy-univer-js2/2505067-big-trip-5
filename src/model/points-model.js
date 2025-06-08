@@ -25,6 +25,10 @@ export default class PointsModel extends Observable {
     return this.#allOffers;
   }
 
+  get loading() {
+    return this.#isLoading;
+  }
+
   async updatePoint(updateType, update) {
     const index = this.points.findIndex((point) => point.id === update.id);
 
@@ -68,10 +72,6 @@ export default class PointsModel extends Observable {
     } catch {
       throw new Error('Can\'t delete point');
     }
-  }
-
-  get loading() {
-    return this.#isLoading;
   }
 
   async init() {
