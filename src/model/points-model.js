@@ -25,6 +25,10 @@ export default class PointsModel extends Observable {
     return this.#allOffers;
   }
 
+  get loading() {
+    return this.#isLoading;
+  }
+
   async updatePoint(updateType, update) {
     const index = this.points.findIndex((point) => point.id === update.id);
 
@@ -70,10 +74,6 @@ export default class PointsModel extends Observable {
     }
   }
 
-  get loading() {
-    return this.#isLoading;
-  }
-
   async init() {
     let isLoadingFailed = false;
     try {
@@ -110,4 +110,5 @@ export default class PointsModel extends Observable {
     return adaptedPoint;
   };
 }
+
 
